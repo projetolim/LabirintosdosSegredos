@@ -1,0 +1,21 @@
+import numpy as np import matplotlib.pyplot as plt import random
+
+def generate_maze(size): maze = np.ones((size, size), dtype=int) start_x, start_y = random.choice(range(1, size, 2)), random.choice(range(1, size, 2)) maze[start_x, start_y] = 0 walls = [(start_x + dx, start_y + dy) for dx, dy in [(-2, 0), (2, 0), (0, -2), (0, 2)] if 0 < start_x + dx < size and 0 < start_y + dy < size]
+
+while walls:
+    wx, wy = random.choice(walls)
+    walls.remove((wx, wy))
+    if maze[wx, wy] == 1:
+        neighbors = [(wx + dx, wy + dy) for dx, dy in [(-2, 0), (2, 0), (0, -2), (0, 2)] if 0 < wx + dx < size and 0 < wy + dy < size]
+        open_neighbors = [n for n in neighbors if maze[n] == 0]
+        if open_neighbors:
+            nx, ny = random.choice(open_neighbors)
+            maze[(wx + nx) // 2, (wy + ny) // 2] = 0
+            maze[wx, wy] = 0
+            walls.extend([(wx + dx, wy + dy) for dx, dy in [(-2, 0), (2, 0), (0, -2), (0, 2)] if 0 < wx + dx < size and 0 < wy + dy < size])
+
+return maze
+
+def plot_maze(maze): plt.figure(figsize=(10, 10)) plt.imshow(maze, cmap='binary') plt.xticks([]) plt.yticks([]) plt.show()
+
+if name == "main": size = 21  # Tamanho do labirinto (deve ser ímpar) maze = generate_maze(size) plot_maze(maze)
